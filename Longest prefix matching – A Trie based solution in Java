@@ -1,0 +1,112 @@
+//Longest prefix matching – A Trie based solution in Java
+// This is bruteforce solution 
+import java.util.*;
+public class TrieDataStructure 
+{
+	public static String compare(String str1,String str2)
+	{
+		String ans ="";
+		for(int i=0;i<(str1.length()<str2.length()?str1.length():str2.length());i++)
+		{
+			if(str1.charAt(i)==str2.charAt(i))
+			{
+				ans+=str1.charAt(i);
+			}
+			else
+			   break;
+		}
+		return ans;
+	}
+	public static String PrifixMatching(HashMap<Character,Integer> map1,String word[],String input[])
+	{
+		String final_ans="";
+		
+		for(int i=0;i<input.length;i++)
+		{
+			String ans="";
+			for(int j=0;j<word.length;j++)
+			{
+				String pans = compare(input[i],word[j]);
+				if(ans.length()==0 || ans.length()<pans.length())
+					ans=input[i];
+			}
+			final_ans+=ans+" ";
+		}
+		return final_ans;
+	}
+	public static void main(String[] args) 
+	{
+		String word[] = {"are", "area", "base", "cat", "cater", "children", "basement"};
+		String input[] = {"caterer","basemexy"};
+		HashMap<Character,Integer> map1 = new HashMap<>();
+		System.out.println(PrifixMatching(map1,word,input));
+	}
+}
+// below cod is optimized with Trie datastructure
+import java.util.*;
+
+public class TrieDataStructure 
+{
+	static class TrieNode
+	{
+		HashMap<Character,TrieNode> children;
+		boolean isEnd;
+		TrieNode()
+		{
+			isEnd=false;
+			children = new HashMap<Character,TrieNode>();
+		}
+	}
+	static TrieNode root;
+	public static void insert(String key)
+    {
+		
+        TrieNode curr = root;
+        for (char c: key.toCharArray())
+        {
+            curr.children.putIfAbsent(c, new TrieNode());
+            curr = curr.children.get(c);
+        }
+ 
+        curr.isEnd = true;
+    }
+	public static String getMatchingPrefix(String input)  
+	{ 
+        TrieNode curr = root;
+        String ans="";
+        int prev_level=0;
+        for(int i=0;i<input.length();i++)
+        {
+        	char ch = input.charAt(i);
+        	if(curr.children.get(ch)!=null)
+        	{
+        		ans+=ch;
+        		curr=curr.children.get(ch);
+        		
+        		if(curr.isEnd)
+        			prev_level=i+1;
+        	}
+        	else
+        		break;
+        }
+        if( !curr.isEnd) 
+            return ans.substring(0, prev_level);         
+
+    else return ans;
+    }	
+    public static void main(String[] args) 
+	{
+    	String keys[] = {"the", "a", "there", "answer", "any", 
+                "by", "bye", "their"}; 
+
+
+        root = new TrieNode(); 
+
+        for (int i = 0; i < keys.length ; i++) 
+            insert(keys[i]);
+        
+        String input = "caterer"; 
+        System.out.print(input + ":   "); 
+        System.out.println(getMatchingPrefix(input)); 
+	}
+}

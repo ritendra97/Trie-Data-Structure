@@ -1,0 +1,111 @@
+//Implementation of trie data Structure
+import java.util.*;
+
+public class TrieDataStructure 
+{
+	static final int ALPHABET_SIZE = 26;
+	static class TrieNode
+	{
+		boolean isEnd;
+		TrieNode[] children = new TrieNode[ALPHABET_SIZE];
+		TrieNode()
+		{
+			isEnd=false;
+			for(int i=0;i<ALPHABET_SIZE;i++)
+			{
+				children[i]=null;
+			}
+		}
+	}
+	static TrieNode root;
+	public static void insert(String word)
+	{
+		TrieNode node = root;
+		for(int level=0;level<word.length();level++)
+		{
+			int index = word.charAt(level)-'a';
+			if(node.children[index]==null)
+				node.children[index]=new TrieNode();
+			node = node.children[index];
+		}
+		node.isEnd=true;
+	}
+	public static boolean search(String word)
+	{
+		TrieNode node = root;
+		for(int level=0;level<word.length();level++)
+		{
+			int index = word.charAt(level)-'a';
+			if(node.children[index]==null)
+				return false;
+			node = node.children[index];
+		}
+		return node.isEnd;
+	}
+	public static boolean eordexist(String prefix)
+	{
+		TrieNode node = root;
+		for(int level=0;level<prefix.length();level++)
+		{
+			int index = prefix.charAt(level)-'a';
+			if(node.children[index]==null)
+				return false;
+			node = node.children[index];
+		}
+		return true;
+	}
+	static boolean isEmpty(TrieNode root)
+    {
+    	for(int i=0;i<26;i++)
+    	{
+    		if(root.children[i]==null)
+    			return true;
+    	}
+    	return false;
+    }
+	static TrieNode delete(TrieNode root,String key,int depth)
+    {
+		if(root==null)
+			return null;
+		
+		if(depth == key.length())
+		{
+			if(root.isEnd==true)
+				root.isEnd=false;
+			if(isEmpty(root))
+				root=null;
+			return root;
+		}
+		int index  = key.charAt(depth)-'a';
+		
+		root.children[index] = delete(root.children[index],key,depth+1);
+		
+		if(isEmpty(root) && root.isEnd==false)
+			root=null;
+		return root;
+    }
+	public static void main(String args[]) 
+    { 
+		String keys[] = {"the", "a", "there", "answer", "any", 
+                "by", "bye", "their"}; 
+
+
+        root = new TrieNode(); 
+
+        for (int i = 0; i < keys.length ; i++) 
+            insert(keys[i]);
+
+        String output[] = {"Yes word exist","No word doesn't exist"};
+         
+        delete(root,"the",0);
+         
+        if(search("the")==true)
+        {
+        	System.out.println(output[0]);
+        }
+        else
+        {
+        	System.out.println(output[1]);
+        }
+    } 
+}

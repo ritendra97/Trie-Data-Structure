@@ -1,0 +1,61 @@
+//Implementation of trie data Structure Using HashMap
+import java.util.*;
+
+class TrieNode
+{
+	HashMap<Character,TrieNode> children;
+	boolean endOfword;
+	TrieNode()
+	{
+		children = new HashMap<>();
+		endOfword=false;
+	}
+}
+public class Practice 
+{
+	static TrieNode root;
+	public static void insert(String word)
+	{
+		TrieNode node = root;
+		for(char c:word.toCharArray())
+		{
+		    node.children.putIfAbsent(c, new TrieNode());
+		    node = node.children.get(c);
+		}
+		node.endOfword=true;
+	}
+	public static boolean search(String word)
+	{
+		TrieNode node = root;
+		for(char c:word.toCharArray())
+		{
+		    if(node.children.get(c)==null)
+		    	return false;
+		    node = node.children.get(c);
+		}
+		return node.endOfword;
+	}
+	public static void main(String[] args)
+	{        
+		String keys[] = {"the", "a", "there", "answer", "any", 
+                "by", "bye", "their"}; 
+
+
+        root = new TrieNode(); 
+
+        for (int i = 0; i < keys.length ; i++) 
+            insert(keys[i]);
+
+        String output[] = {"Yes word exist","No word doesn't exist"};
+        
+        if(search("the")==true)
+        {
+        	System.out.println(output[0]);
+        }
+        else
+        {
+        	System.out.println(output[1]);
+        }
+	}
+
+}

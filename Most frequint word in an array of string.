@@ -1,0 +1,67 @@
+import java.util.*;
+//Most frequent word in an array of strings
+
+class Solution {
+	
+    static class TrieNode{
+		String str;
+		int max_count;
+		HashMap<Character,TrieNode> children;
+		
+		TrieNode(){
+			children = new HashMap<Character,TrieNode>();
+		}
+	}
+	static TrieNode root;
+	public static void insert(String str) {
+		
+		TrieNode node = root;
+		for(int i=0;i<str.length();i++) {
+			
+			char ch = str.charAt(i);
+			if(node.children.get(ch)==null) {
+				node.children.put(ch, new  TrieNode());
+			}
+			node = node.children.get(ch);
+		}
+		node.str = str;
+		node.max_count+=1;
+	}
+	public static int search(String word)
+	{
+		TrieNode node = root;
+		for(int level=0;level<word.length();level++)
+		{
+			char ch = word.charAt(level);
+			if(node.children.get(ch)==null)
+				break;
+			node = node.children.get(ch);
+		}
+		return node.max_count;
+	}
+	public static String mostFrequentWord(String arr[],int n) {    
+	
+		root = new TrieNode();
+		
+		for(int i=0;i<arr.length;i++) {
+			insert(arr[i]);
+		}
+		
+		int max_count=0;
+		String ans ="";
+		
+		for(int j=0;j<arr.length;j++) {
+			int max = search(arr[j]);
+			if(max>max_count) {
+				max_count = max;
+				ans = arr[j];
+			}
+		}
+		return ans;
+	}
+	public static void main(String[] args) {
+		
+		String arr[] = {"geeks", "for", "geeks", "a","portal", "to", "learn", "can","be", "computer", "science","zoom", "yup", "fire", "in", "be", "data", "geeks"};
+		System.out.println(mostFrequentWord(arr,arr.length));
+	}
+}
